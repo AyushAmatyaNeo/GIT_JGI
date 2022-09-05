@@ -70,6 +70,7 @@ class TravelStatusRepository extends HrisRepository {
                   TR.DEPARTURE                             AS DEPARTURE,
                   TR.PURPOSE                               AS PURPOSE,
                   TR.VOUCHER_NO                            AS VOUCHER_NO,
+                  TC.CATEGORY_NAME                         AS CATEGORY_NAME,
                   TR.REQUESTED_TYPE                        AS REQUESTED_TYPE,
                   (
                   CASE
@@ -102,6 +103,8 @@ class TravelStatusRepository extends HrisRepository {
                   RAA.EMPLOYEE_ID                                                 AS APPROVER_ID,
                   RAA.FULL_NAME                                                   AS APPROVER_NAME
                 FROM HRIS_EMPLOYEE_TRAVEL_REQUEST TR
+                LEFT JOIN HRIS_TRAVEL_CATEGORY TC
+                ON(TC.ID=TR.TRAVEL_CATEGORY_ID)
                 LEFT JOIN HRIS_EMPLOYEES E
                 ON (E.EMPLOYEE_ID =TR.EMPLOYEE_ID)
                 LEFT JOIN HRIS_EMPLOYEES RE
@@ -117,6 +120,7 @@ class TravelStatusRepository extends HrisRepository {
                 WHERE 1          =1 {$condition['sql']}";
            
            $finalSql = $this->getPrefReportQuery($sql);
+          //  echo '<pre>';print_r($finalSql);die;
            return $this->rawQuery($finalSql, $boundedParameter);     
          
         // return $this->rawQuery($finalSql);

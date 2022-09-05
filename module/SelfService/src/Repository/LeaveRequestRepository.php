@@ -184,7 +184,6 @@ class LeaveRequestRepository implements RepositoryInterface {
         ]);
 		
         $statement = $sql->prepareStatementForSqlObject($select);
-		
         $resultset = $statement->execute();
 		
         $entitiesArray = array();
@@ -380,6 +379,7 @@ LEFT JOIN Hris_Holiday_Master_Setup H ON (WH.HOLIDAY_ID=H.HOLIDAY_ID))"], "SLR.I
         $boundedParameter['leaveId']=$leaveId;
         $boundedParameter['halfDay']=$halfDay;
         $rawResult = EntityHelper::rawQueryResult($this->adapter, "SELECT HRIS_AVAILABLE_LEAVE_DAYS(:fromDate,:toDate,:employeeId,:leaveId,:halfDay) AS AVAILABLE_DAYS FROM DUAL",$boundedParameter);
+        // echo '<pre>';print_r($rawResult);die;
         return $rawResult->current();
         
     }

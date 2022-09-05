@@ -8,6 +8,8 @@
         $('select#form-employeeId').select2();
         $('select#travelEmpSub').select2();
         var employeeId = $('#employeeId').val();
+        var $travelCategory=$('#travelCategory');
+        var $requestedAmount=$('#form-requestedAmount');
         app.floatingProfile.setDataFromRemote(employeeId);
 
         var $print = $('#print');
@@ -20,6 +22,7 @@
         var $toDate = $('#form-toDate');
         var $nepaliFromDate = $('#nepaliStartDate1');
         var $nepaliToDate = $('#nepaliEndDate1');
+        var travel=[];
         
         $fromDate.on('change', function () {
             var diff =  Math.floor(( Date.parse($toDate.val()) - Date.parse($fromDate.val()) ) / 86400000);
@@ -40,25 +43,53 @@
             var diff =  Math.floor(( Date.parse($toDate.val()) - Date.parse($fromDate.val()) ) / 86400000);
             $noOfDays.val(diff + 1);
         });
-  
-        var myDropzone;
-        Dropzone.autoDiscover = false;
-        myDropzone = new Dropzone("div#dropZoneContainer", {
-                url: document.uploadUrl,
-                autoProcessQueue: false,
-                maxFiles: 1, 
-                addRemoveLinks: true,
-                init: function () { 
-                this.on("success", function (file, success) { 
-                    if (success.success) { 
-                        imageUpload(success.data);
-                    }
-                });
-                this.on("complete", function (file) { 
-                    this.removeAllFiles(true);
-                });
-            }
-            });
+        $travelCategory.on('change',function(){
+            travelCategoryChange(this);
+        })
+        //when page loads suddenly it display value 
+        app.pullDataById(document.addTravelCategoryLink,{
+            'id':$travelCategory.val()
+        }).then(function(success){
+            travel=success.data;
+            $requestedAmount.val(success.data.ADVANCE_AMOUNT);
+            $requestedAmount.attr({
+                "max" : success.data.ADVANCE_AMOUNT
+             });    
+        });
+        //when user  change value it display value 
+
+        var travelCategoryChange=function(obj){
+            var $this=$(obj);
+            app.pullDataById(document.addTravelCategoryLink,{
+                'id':$this.val()
+            }).then(function(success){
+                travel=success.data;
+                $requestedAmount.val(success.data.ADVANCE_AMOUNT);
+                $requestedAmount.attr({
+                    "max" : success.data.ADVANCE_AMOUNT
+                 });           
+             });
+        }
+
+      
+        // var myDropzone;
+        // Dropzone.autoDiscover = false;
+        // myDropzone = new Dropzone("div#dropZoneContainer", {
+        //         url: document.uploadUrl,
+        //         autoProcessQueue: false,
+        //         maxFiles: 1, 
+        //         addRemoveLinks: true,
+        //         init: function () { 
+        //         this.on("success", function (file, success) { 
+        //             if (success.success) { 
+        //                 imageUpload(success.data);
+        //             }
+        //         });
+        //         this.on("complete", function (file) { 
+        //             this.removeAllFiles(true);
+        //         });
+        //     }
+        //     });
 
         $('#addDocument').on('click', function () {
             $('#documentUploadModel').modal('show');

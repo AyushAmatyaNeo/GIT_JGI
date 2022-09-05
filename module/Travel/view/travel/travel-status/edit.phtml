@@ -24,6 +24,8 @@ $noOfDays = $form->get('noOfDays');
 $destination = $form->get('destination');
 
 $purpose = $form->get('purpose');
+$travelCategory=$form->get('travelCategory');
+$travelCategory->setValueOptions([$detail['ID'] => $detail['CATEGORY_NAME']]);
 $departure = $form->get('departure');
 $requestedType = $form->get('requestedType');
 $requestedType->setValueOptions([$detail['REQUESTED_TYPE'] => $detail['REQUESTED_TYPE_DETAIL']]);
@@ -41,6 +43,7 @@ print $this->form()->openTag($form);
 ?>
 <script>
     document.urlCss = '<?= $this->basePath('css/custom.css') ?>';
+    document.advanceAmt=<?=$advanceAmt?>;
 </script>
 <div class="col-sm-12">
     <div class="portlet box custom-box">
@@ -197,6 +200,13 @@ print $this->form()->openTag($form);
                         </div>
                     </div>
 
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <?php print $this->formLabel($travelCategory); ?>
+                            <?php print $this->formElement($travelCategory);?>
+                            <?php print $this->formElementErrors()->render($travelCategory, ['class' => 'help-block']); ?>
+                        </div>   
+                    </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <?php print $this->formLabel($requestedType); ?>

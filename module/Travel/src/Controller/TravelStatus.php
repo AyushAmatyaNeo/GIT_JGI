@@ -40,7 +40,6 @@ class TravelStatus extends HrisController {
             try {
                 $search = $request->getPost();
                 $list = $this->travelStatusRepository->getFilteredRecord($search);
-
                 if($this->preference['displayHrApproved'] == 'Y'){
                     for($i = 0; $i < count($list); $i++){
                         if($list[$i]['HARDCOPY_SIGNED_FLAG'] == 'Y'){
@@ -165,13 +164,14 @@ class TravelStatus extends HrisController {
                 $travelRequest->modifiedDt = Helper::getcurrentExpressionDate();
                 $travelRequest->employeeId = $this->employeeId;
                 $this->travelRequestRepository->edit($travelRequest, $id);
+                // print_r('dg');die;
                 $this->flashmessenger()->addMessage("Travel Request Successfully Edited!!!");
                 return $this->redirect()->toRoute("travelApply");
             }
         }
 
         $detail = $this->travelRequestRepository->fetchById($id);
-        //$fileDetails = $this->repository->fetchAttachmentsById($id);
+        // echo '<pre>';print_r($detail);die;
         $model = new TravelRequestModel();
         $model->exchangeArrayFromDB($detail);
         $this->form->bind($model);
@@ -185,7 +185,8 @@ class TravelStatus extends HrisController {
                     'approver' => $detail['APPROVED_BY_NAME'] == null ? $detail['APPROVER_NAME'] : $detail['APPROVED_BY_NAME'],
                     'detail' => $detail,
                     'todayDate' => date('d-M-Y'),
-                    'advanceAmount' => $advanceAmount
+                    'advanceAmount' => $advanceAmount,
+                    'advanceAmt'=>$detail['ADVANCE_AMOUNT']
                         //'files' => $fileDetails
         ]);
     }

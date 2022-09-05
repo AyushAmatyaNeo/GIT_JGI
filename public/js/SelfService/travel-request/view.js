@@ -6,6 +6,7 @@
         window.app.floatingProfile.setDataFromRemote(employeeId);
 
         var $print = $('#print');
+        var advanceAmt= document.advanceAmt;
         $print.on('click', function () {
             app.exportDomToPdf('printableArea', document.urlCss);
         });
@@ -18,7 +19,6 @@
         
         var diff =  Math.floor(( Date.parse($toDate.val()) - Date.parse($fromDate.val()) ) / 86400000);
         $noOfDays.val(diff + 1);
-        
         $fromDate.on('change', function () {
             var diff =  Math.floor(( Date.parse($toDate.val()) - Date.parse($fromDate.val()) ) / 86400000);
             $noOfDays.val(diff + 1);
@@ -38,6 +38,21 @@
             var diff =  Math.floor(( Date.parse($toDate.val()) - Date.parse($fromDate.val()) ) / 86400000);
             $noOfDays.val(diff + 1);
         });
+
+        // app.pullDataById(document.addTravelCategoryLink,{
+        //     'id':$travelCategory.val()
+        // }).then(function(success){
+        //     $requestedAmount.attr({
+        //         'max':success.data.ADVANCE_AMOUNT
+        //     });
+        // });
+
+        $('#form-requestedAmount').attr({
+            'max':advanceAmt
+        });
         
     });
 })(window.jQuery, window.app);
+
+
+

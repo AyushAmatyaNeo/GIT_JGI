@@ -15,7 +15,9 @@ $this->headScript()
     document.urlExpenseAdd = '<?= $this->url("travelRequest", ["action" => "expenseAdd"]) ?>';
     document.urlExpense = '<?= $this->url("travelRequest", ["action" => "expense"]) ?>';
     document.urlExpenseDetailList = '<?= $this->url("travelRequest", ["action" => "expenseDetailList"]) ?>';
-    document.urlDeleteExpenseDetail = '<?= $this->url("travelRequest", ["action" => "deleteExpenseDetail"]) ?>';</script>
+    document.urlDeleteExpenseDetail = '<?= $this->url("travelRequest", ["action" => "deleteExpenseDetail"]) ?>';
+    document.dailyAllowance = <?=$dailyAllowance?>;
+</script>
 <div class="page-bar">
     <?= $this->navigation('Zend\Navigation\travelRequest')->breadcrumbs()->setMinDepth(0)->setPartial('partial/breadcrumb') ?>
 </div>
@@ -84,18 +86,22 @@ if ($this->messages && (sizeof($this->messages) > 1)) {
                         </div>
                     </div>
                     <div class="row">
-                           <div class="col-xs-12 col-sm-4 col-md-4 col-box bottomgap">
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-box bottomgap">
                             <table>
                                 <tr>
                                     <td width="40%">
-                                        <label for="destination">Departure :</label> 
+                                        <label for="travelCategory">Travel Category :</label> 
                                     </td>
                                     <td>
-                                        <input type="text" disabled="disabled" value="<?php echo $detail['DESTINATION'] ?>" name="destination" required="required" id="destination" class="form-control">
+                                        <input type="text" disabled="disabled" value="<?php echo $detail['CATEGORY_NAME'] ?>" name="travelCategory" required="required" id="travelCategory" class="form-control">
                                     </td>
                                 </tr>
                             </table>
                         </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> be2b8a386c02d4d04d701c2724e933b07b666bb9
                         <div class="col-xs-12 col-sm-4 col-md-4 col-box bottomgap">
                             <table>
                                 <tr>
@@ -132,6 +138,7 @@ if ($this->messages && (sizeof($this->messages) > 1)) {
                             </table>
                         </div>
 
+                        
                         <div class="col-xs-12 col-sm-4 col-md-4 col-box bottomgap">
                         </div>
 
@@ -227,7 +234,7 @@ if ($this->messages && (sizeof($this->messages) > 1)) {
                                         </div>
                                     </td>
                                     <td>
-                                        <input type="number" ng-model="expenseDtlForm.allowance" style="width: 60px;" step="0.01" min="0"/>
+                                        <input type="number" disabled="disabled" value="<?php echo $detail['DAILY_ALLOWANCE']; ?>" ng-model="expenseDtlForm.allowance" style="width: 60px;"  class="form-control"/>
                                     </td>
                                     <td>
                                         <input type="number" ng-model="expenseDtlForm.localConveyence"style="width: 69px;" step="0.01" min="0"/>

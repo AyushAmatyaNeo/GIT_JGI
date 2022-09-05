@@ -96,7 +96,9 @@ class TravelApply extends HrisController {
             $travelSubstitute = $postData->travelSubstitute;
             $this->form->setData($postData);
             if ($this->form->isValid()) {
+                // print_r($this->form->getData());die;--travelCategory, travelCategory
                 $model->exchangeArrayFromForm($this->form->getData());
+
                 $model->travelId = ((int) Helper::getMaxId($this->adapter, TravelRequestModel::TABLE_NAME, TravelRequestModel::TRAVEL_ID)) + 1;
                 $model->requestedDate = Helper::getcurrentExpressionDate();
 //                $model->status = 'RQ';
@@ -106,7 +108,6 @@ class TravelApply extends HrisController {
                 if($model->status == 'AP'){
                     $model->hardcopySignedFlag = 'Y';
                 }
-
                 $this->travelRequesteRepository->add($model);
                 $this->flashmessenger()->addMessage("Travel Request Successfully added!!!");
 
@@ -174,8 +175,24 @@ class TravelApply extends HrisController {
                     'requestTypes' => $requestType,
                     'transportTypes' => $transportTypes,
                     'applyOption' => $applyOption,
-                    'employees' => EntityHelper::getTableKVListWithSortOption($this->adapter, "HRIS_EMPLOYEES", "EMPLOYEE_ID", ["EMPLOYEE_CODE", "FULL_NAME"], ["STATUS" => 'E', 'RETIRED_FLAG' => 'N'], "FULL_NAME", "ASC", "-", false, true, $this->employeeId)
+                    'employees' => EntityHelper::getTableKVListWithSortOption($this->adapter, "HRIS_EMPLOYEES", "EMPLOYEE_ID", ["EMPLOYEE_CODE", "FULL_NAME"], ["STATUS" => 'E', 'RETIRED_FLAG' => 'N'], "FULL_NAME", "ASC", "-", false, true, $this->employeeId),
+                    'travelCategoryList'=>EntityHelper::getTableKVListWithSortOption($this->adapter,"HRIS_TRAVEL_CATEGORY","ID",["CATEGORY_NAME"],["STATUS"=>'E'],"CATEGORY_NAME","ASC","",FALSE,TRUE)
         ]);
+    }
+
+    public function travelCategoryAction(){
+        $request=$this->getRequest();
+        if($request->isPost()){
+            try{
+                $data=$request->getPost();
+                $id=$data['id'];
+                $rawList=$this->travelRequesteRepository->getTravelRecords($id);
+
+                return new JsonModel(['success'=>true,'data'=>$rawList,'error'=>'']);
+            }catch (Exception $e){
+                return new JsonModel(['success'=>false,'data'=>[],'error'=>$e->getMessage()]);
+            }
+        }
     }
 
 }

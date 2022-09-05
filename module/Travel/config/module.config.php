@@ -37,6 +37,7 @@ return [
                     ],
                 ],
             ],
+            
             'travelItnary' => [
                 'type' => Segment::class,
                 'options' => [
@@ -86,6 +87,7 @@ return [
                 ],
             ],
         ],
+        
         'travelApply' => [
                 [
                 'label' => "Travel Apply",
@@ -120,6 +122,10 @@ return [
             Controller\TravelStatus::class => ControllerFactory::class,
             Controller\TravelApply::class => ControllerFactory::class,
             Controller\TravelItnaryRequest::class => ControllerFactory::class
+<<<<<<< HEAD
+=======
+
+>>>>>>> be2b8a386c02d4d04d701c2724e933b07b666bb9
         ],
     ],
     'view_manager' => [

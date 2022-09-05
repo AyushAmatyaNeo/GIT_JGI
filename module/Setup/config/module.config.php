@@ -26,6 +26,8 @@ use Setup\Controller\ServiceQuestionController;
 use Setup\Controller\ServiceTypeController;
 use Setup\Controller\TrainingController;
 use Setup\Controller\ShiftGroupController;
+use Setup\Controller\TravelCategoryController;
+
 use Zend\Router\Http\Segment;
 
 return [
@@ -51,6 +53,19 @@ return [
                     ]
                 ]
             ],
+<<<<<<< HEAD
+=======
+            'travelCategory'=>[
+                'type'=>Segment::class,
+                'options'=>[
+                    'route'=>'/setup/travelCategory[/:action[/:id]]',
+                    'defaults'=>[
+                        'controller'=>TravelCategoryController::class,
+                        'action'=>'index'
+                    ],
+                ],
+            ],
+>>>>>>> be2b8a386c02d4d04d701c2724e933b07b666bb9
             'company' => [
                 'type' => Segment::class,
                 'options' => [
@@ -946,6 +961,43 @@ return [
                 ]
             ]
         ],
+        'travelCategory'=>[
+            [
+                'label'=>"Travel Category",
+                'route'=>"travelCategory"
+            ],
+            [
+                'label'=>"Travel Category",
+                'route'=>"travelCategory",
+                'pages'=>[
+                    [
+                        'label'=>'List',
+                        'route'=>'travelCategory',
+                        'action'=>'index',
+                    ],
+                    [
+                        'label'=>'Add',
+                        'route'=>'travelCategory',
+                        'action'=>'add',
+                    ],
+                    [
+                        'label'=>'Detail',
+                        'route'=>'travelCategory',
+                        'action'=>'view',
+                    ],
+                    [
+                        'label'=>'Edit',
+                        'route'=>'travelCategory',
+                        'action'=>'edit',
+                    ],
+                    [
+                        'label'=>'Delete',
+                        'route'=>'travelCategory',
+                        'action'=>'delete',
+                    ],
+                ],
+            ],
+        ],
         'fileType' => [
             [
                 'label' => 'File Type',
@@ -1026,7 +1078,9 @@ return [
             FunctionalTypesController::class => ControllerFactory::class,
             FunctionalLevelsController::class => ControllerFactory::class,
             FileTypeController::class => ControllerFactory::class,
-            ShiftGroupController::class => ControllerFactory::class
+            ShiftGroupController::class => ControllerFactory::class,
+            TravelCategoryController::class => ControllerFactory::class
+
         ],
     ],
     'view_manager' => [

@@ -13,12 +13,18 @@ class EmailHelper {
     public static function getSmtpTransport(): Smtp {
         $transport = new Smtp();
         $options = new SmtpOptions([
-            'host' => 'smtp.legacy.office365.com',
+            // 'host' => 'smtp.legacy.office365.com',
+            // 'port' => 587,
+            // 'connection_class' => 'login',
+            // 'connection_config' => [
+            //     'username' => 'server@jginepal.com',
+            //     'password' => 'P@ssw0rd',
+            'host' => 'smtp.office365.com',
             'port' => 587,
             'connection_class' => 'login',
             'connection_config' => [
-                'username' => 'server@jginepal.com',
-                'password' => 'P@ssw0rd',
+                'username' => 'asdf@asdfdd.com',
+                'password' => 'asdf',
                 'ssl' => 'tls',
             ],
         ]);

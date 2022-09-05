@@ -58,6 +58,7 @@
             {field: "REQUESTED_AMOUNT", title: "Request Amt."},
             {field: "REQUESTED_TYPE", title: "Request For"},
             {field: "TRANSPORT_TYPE_DETAIL", title: "Transport"},
+            {field: "CATEGORY_NAME", title: "Travel Category Name"},
             {field: "STATUS_DETAIL", title: "Status"},
             {field: "TRAVEL_ID", title: "Action", template: action}
         ], null, null, null, 'Travel Request List');
@@ -110,7 +111,8 @@
             'RECOMMENDED_REMARKS': 'Recommended Remarks',
             'RECOMMENDED_DATE': 'Recommended Date',
             'APPROVED_REMARKS': 'Approved Remarks',
-            'APPROVED_DATE': 'Approved Date'
+            'APPROVED_DATE': 'Approved Date',
+            'CATEGORY_NAME':'Travel Category Name'
         };
         $('#excelExport').on('click', function () {
             app.excelExport($table, exportMap, 'Travel Request List.xlsx');

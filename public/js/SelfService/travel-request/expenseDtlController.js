@@ -11,6 +11,7 @@
                     {"id": "BS", "name": "Bus"},
                     {"id": "OF", "name": "On Foot"}
                 ];
+                var dailyAllowance = document.dailyAllowance;
                 $scope.travelDetail = {
                     departureDateMain: '',
                     returnedDate: ''
@@ -25,7 +26,7 @@
                     destinationPlace: "",
                     transportType: $scope.transportTypeList[0],
                     fare: 0,
-                    allowance: 0,
+                    allowance: dailyAllowance,
                     localConveyence: 0,
                     miscExpense: 0,
                     total: 0,
@@ -49,7 +50,7 @@
                         destinationPlace: "",
                         transportType: $scope.transportTypeList[0],
                         fare: 0,
-                        allowance: 0,
+                        allowance: dailyAllowance,
                         localConveyence: 0,
                         miscExpense: 0,
                         total: 0,

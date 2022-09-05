@@ -70,6 +70,7 @@
             {field: "TRAVEL_CODE", title: "T Code", width: 100},
             {field: "REQUESTED_TYPE_DETAIL", title: "Request For", width: 100},
             {field: "TRANSPORT_TYPE_DETAIL", title: "Transport", width: 100},
+            {field: "CATEGORY_NAME", title: "Travel Category Name", width: 100},
             {field: "STATUS_DETAIL", title: "Status", width: 90},
             {field: "VOUCHER_NO", title: "Voucher", width: 90},
             {field: "TRAVEL_ID", title: "Action", template: action, width: 80}
@@ -117,6 +118,7 @@
             'STATUS_DETAIL': 'Status',
             'PURPOSE': 'Purpose',
             'REMARKS': 'Remarks',
+            'CATEGORY_NAME':'Travel Category Name',
             'RECOMMENDER_NAME': 'Recommender',
             'APPROVER_NAME': 'Approver',
             'RECOMMENDED_BY_NAME': 'Recommended By',

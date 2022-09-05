@@ -156,10 +156,9 @@ class FlatValue extends HrisController {
         $positions = EntityHelper::getTableList($this->adapter, Position::TABLE_NAME, [Position::POSITION_ID, Position::POSITION_NAME, Position::LEVEL_NO]);
         return $this->stickFlashMessagesTo([
                     'fiscalYears' => $fiscalYears,
-                    'flatValues' => $flatValues,
-                    'positions' => $positions,
 					'acl' => $this->acl,
 					'employeeDetail' => $this->storageData['employee_detail'],
+                    'positions' => $positions
         ]);
     }
 

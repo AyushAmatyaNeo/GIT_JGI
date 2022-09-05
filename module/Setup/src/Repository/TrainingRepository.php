@@ -90,6 +90,7 @@ class TrainingRepository implements RepositoryInterface {
         $select->join(['I' => Institute::TABLE_NAME], "T." . Training::INSTITUTE_ID . "=I." . Institute::INSTITUTE_ID, [Institute::INSTITUTE_NAME => new Expression('(I.' . Institute::INSTITUTE_NAME . ')')], 'left');
         $select->where(["T.TRAINING_ID" => $id]);
         $statement = $sql->prepareStatementForSqlObject($select);
+        // echo '<pre>';print_r($statement);die;
         $result = $statement->execute();
         return $result->current();
     }

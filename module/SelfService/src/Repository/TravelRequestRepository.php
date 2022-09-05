@@ -57,6 +57,7 @@ class TravelRequestRepository extends HrisRepository implements RepositoryInterf
     
     public function add(Model $model) {
         $addData=$model->getArrayCopyForDB();
+        // echo '<pre>';print_r($addData);die;
         $this->tableGateway->insert($addData);
         
         if ($addData['STATUS']=='AP' && date('Y-m-d', strtotime($model->fromDate)) <= date('Y-m-d')) {
@@ -111,7 +112,33 @@ class TravelRequestRepository extends HrisRepository implements RepositoryInterf
  
     public function edit(Model $model, $id) {
         $array = $model->getArrayCopyForDB();
+        unset($array['EMPLOYEE_ID']);
         $this->tableGateway->update($array, [TravelRequest::TRAVEL_ID => $id]);
+
+    }
+    
+    public function editHrTravel(Model $model, $id) {
+        $sql="UPDATE hris_employee_travel_request
+        SET
+            employee_id = $model->employeeId,
+            from_date =  $model->fromDate,
+            to_date =  $model->toDate,
+            destination =  $model->destination,
+            departure =  $model->departure,
+            purpose =  $model->purpose,
+            requested_amount =  $model->requestedAmount,
+            requested_type =  $model->requestedType,
+            remarks =$model->remarks,
+            recommended_remarks =  $model->recommendedRemarks,
+            approved_remarks =  $model->approvedRemarks,
+            transport_type =  $model->transportType,
+            travel_category_id =  $model->travelCategory
+        WHERE
+            travel_id = $id";
+            $statement = $this->adapter->query($sql);
+            echo '<pre>';print_r($statement);die;
+            $result = $statement->execute();
+            return $result->current();
     }
 
     public function fetchAll() {
@@ -151,6 +178,11 @@ class TravelRequestRepository extends HrisRepository implements RepositoryInterf
             new Expression("TR.APPROVED_REMARKS AS APPROVED_REMARKS"),
             new Expression("TR.REFERENCE_TRAVEL_ID AS REFERENCE_TRAVEL_ID"),
             new Expression("TR.ITNARY_ID AS ITNARY_ID"),
+            new Expression("TC.CATEGORY_NAME AS CATEGORY_NAME"),
+            new Expression("TC.ID AS ID"),
+            NEW Expression("TC.DAILY_ALLOWANCE_AMOUNT AS DAILY_ALLOWANCE"),
+            NEW Expression("TC.ADVANCE_AMOUNT AS ADVANCE_AMOUNT"),
+
             ], true);
 
         $select->from(['TR' => TravelRequest::TABLE_NAME])
@@ -161,6 +193,7 @@ class TravelRequestRepository extends HrisRepository implements RepositoryInterf
                 'SUB_APPROVED_FLAG' => "APPROVED_FLAG",
                 'SUB_APPROVED_FLAG_DETAIL' => new Expression("(CASE WHEN APPROVED_FLAG = 'Y' THEN 'Approved' WHEN APPROVED_FLAG = 'N' THEN 'Rejected' ELSE 'Pending' END)")
                 ], "left")
+            ->join(['TC' => 'HRIS_TRAVEL_CATEGORY'], 'TC.ID=TR.TRAVEL_CATEGORY_ID',["CATEGORY_NAME" => new Expression("INITCAP(TC.CATEGORY_NAME)")], "left")
             ->join(['TSE' => 'HRIS_EMPLOYEES'], 'TS.EMPLOYEE_ID=TSE.EMPLOYEE_ID', ["SUB_EMPLOYEE_NAME" => new Expression("INITCAP(TSE.FULL_NAME)")], "left")
             ->join(['TSED' => 'HRIS_DESIGNATIONS'], 'TSE.DESIGNATION_ID=TSED.DESIGNATION_ID', ["SUB_DESIGNATION_TITLE" => "DESIGNATION_TITLE"], "left")
             ->join(['E' => 'HRIS_EMPLOYEES'], 'E.EMPLOYEE_ID=TR.EMPLOYEE_ID', ["FULL_NAME" => new Expression("INITCAP(E.FULL_NAME)")], "left")
@@ -175,9 +208,22 @@ class TravelRequestRepository extends HrisRepository implements RepositoryInterf
         $select->where(["TR.TRAVEL_ID" => $id]);
         $select->order("TR.REQUESTED_DATE DESC");
         $statement = $sql->prepareStatementForSqlObject($select);
+        // echo '<pre>';print_r($statement);die;
         $result = $statement->execute();
         return $result->current();
     }
+
+    
+
+    public function getTravelRecords($id){
+        $sql="
+        select advance_amount from hris_travel_category where status='E'
+         and id=$id";
+        $statement = $this->adapter->query($sql);
+        $result=$statement->execute();
+        return $result->current();
+    }
+    
 
     public function getFilteredRecords(array $search) {
         $sql = new Sql($this->adapter);
@@ -208,6 +254,7 @@ class TravelRequestRepository extends HrisRepository implements RepositoryInterf
             new Expression("TR.APPROVED_REMARKS AS APPROVED_REMARKS"),
             new Expression("TR.RECOMMENDED_REMARKS AS RECOMMENDED_REMARKS"),
             new Expression("TR.REMARKS AS REMARKS"),
+            NEW Expression("TC.CATEGORY_NAME AS CATEGORY_NAME"),
             new Expression("TR.REQUESTED_TYPE AS REQUESTED_TYPE"),
             new Expression("(CASE WHEN LOWER(TR.REQUESTED_TYPE) = 'ad' THEN 'Advance' ELSE 'Expense' END) AS REQUESTED_TYPE"),
             new Expression("(CASE WHEN TR.STATUS = 'RQ' THEN 'Y' ELSE 'N' END) AS ALLOW_EDIT"),
@@ -216,6 +263,7 @@ class TravelRequestRepository extends HrisRepository implements RepositoryInterf
             ], true);
 
         $select->from(['TR' => TravelRequest::TABLE_NAME])
+            ->join(['TC'=>'HRIS_TRAVEL_CATEGORY'],'TR.TRAVEL_CATEGORY_ID=TC.ID',["CATEGORY_NAME"=>new Expression("INITCAP(TC.CATEGORY_NAME)")],"left")
             ->join(['E' => 'HRIS_EMPLOYEES'], 'E.EMPLOYEE_ID=TR.EMPLOYEE_ID', ["FULL_NAME" => new Expression("INITCAP(E.FULL_NAME)")], "left")
             ->join(['E2' => "HRIS_EMPLOYEES"], "E2.EMPLOYEE_ID=TR.RECOMMENDED_BY", ['RECOMMENDED_BY_NAME' => new Expression("INITCAP(E2.FULL_NAME)")], "left")
             ->join(['E3' => "HRIS_EMPLOYEES"], "E3.EMPLOYEE_ID=TR.APPROVED_BY", ['APPROVED_BY_NAME' => new Expression("INITCAP(E3.FULL_NAME)")], "left")
@@ -266,6 +314,8 @@ class TravelRequestRepository extends HrisRepository implements RepositoryInterf
         }
         $select->order("TR.REQUESTED_DATE DESC");
         $statement = $sql->prepareStatementForSqlObject($select);
+        // echo '<pre>';print_r($statement);die;
+
         $result = $statement->execute($boundedParameter);
         return $result;
     }
